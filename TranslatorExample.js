@@ -11,7 +11,7 @@ function translate() {
   const input_text = document.getElementById("text").value;
   const input_lang = document.getElementById("lang").value;
   const endpoint = 'https://api.cognitive.microsofttranslator.com/';
-  const subscriptionKey = 'df895905582a481d9ef7fdc941e97337';
+  const subscriptionKey = 'subKeyHere';
   // let endpoint = document.getElementById("endpoint").value;
   // let subscriptionKey = document.getElementById("cred").value;
   
