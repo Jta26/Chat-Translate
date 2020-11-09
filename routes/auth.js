@@ -3,6 +3,11 @@ const router = express.Router();
 const passport = require('passport');
 
 
+router.get('/login', (req, res) => {
+    res.render('login')
+});
+
+
 router.post('/register_login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
