@@ -20,6 +20,7 @@
   padding: 1rem;
 }
 
+
 @media (min-width: 544px) {  
   h1 {font-size:1rem;} 
 }
@@ -89,4 +90,9 @@
   border-radius: 2rem;
 }
 
+
+
+
+.logo-container {
+  margin: 20px;
 }

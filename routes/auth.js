@@ -2,6 +2,16 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
+const {forwardOnAuth} = require('../services/auth');
+
+
+router.get('/login', forwardOnAuth, (req, res) => {
+    res.render('login');
+});
+
+router.get('/signup', forwardOnAuth, (req, res) => {
+    res.render('signup')
+})
 
 router.post('/register_login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {

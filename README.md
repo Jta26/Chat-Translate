@@ -16,4 +16,4 @@ passport.js
 socket.io
 
 ### Front End
-React
+EJS / Vanilla JS
