@@ -8,11 +8,14 @@ const express = require("express");
 const app = express();
 const http = require('http').createServer(app);
 const router = express.Router();
+
 const auth = require('./routes/auth');
+const chat = require('./routes/chat');
+
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const passport = require('./services/auth');
+const {passport} = require('./services/auth');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -29,9 +32,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const connection = database.connect();
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 app.use(session({
   secret: process.env.SECRET,
@@ -40,8 +40,12 @@ app.use(session({
   store: new MongoStore({ mongooseConnection: mongoose.connection})
 }));
 
-app.use('/auth', auth);
+app.use(passport.initialize());
+app.use(passport.session());
 
+
+app.use('/auth', auth);
+app.use('/chat', chat);
 
 app.get("/", (req, res) => {
   res.render('index');

@@ -3,7 +3,6 @@ const User = require('../models/user').model;
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -15,12 +14,17 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-    new LocalStrategy({ usernameField: 'email'}, (email, password, done) => {
+    new LocalStrategy({ usernameField: 'email', passReqToCallback: true}, (req, email, password, done) => {
         User.findOne({email: email})
         .then(user => {
             if (!user) {
+                let name = req.body.name;
+                let locale = req.body.locale;
+                if (name == null || locale == null) {
+                    throw 'One or more values are missing';
+                }
                 // create new user, hash the password, and save it.
-                const newUser = new User({ email, password, name: 'test', locale: 'en_US' });
+                const newUser = new User({ email, password, name, locale });
                 console.log('creating new user');
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -56,6 +60,30 @@ passport.use(
             }
         })
     })
-)
+);
 
-module.exports = passport;
+const requiresAuth = (req, res, next) => {
+    console.log(req.isAuthenticated());
+    if (req.isAuthenticated()) {
+        return next()
+    }
+    else {
+        res.redirect('/auth/login');
+    }
+}
+
+// if the user is authenticated already, then we forward them to the chat/dashboard.
+const forwardOnAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.redirect('/chat');
+    }
+    else {
+        next();
+    }
+}
+
+module.exports = {
+    passport,
+    requiresAuth,
+    forwardOnAuth
+};
