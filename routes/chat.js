@@ -4,7 +4,9 @@ const {requiresAuth} = require('../services/auth');
 
 
 router.get('/', requiresAuth, (req, res) => {
-    res.send('Congratz, you\'re logged in.');
+    const user = req.user;
+    console.log(user);
+    res.render('dashboard', {user});
 });
 
 
