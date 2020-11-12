@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+    .dashboard > .nav {
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        border: 1px solid black;
+        height: 99.5vh;
+    }
+        .dashboard > .nav > img {
+            max-width: 50%;
+            min-width: 200px;
+        }
+        .dashboard > .nav > a {
+            font-size: 2em;
+        }

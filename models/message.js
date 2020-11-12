@@ -5,7 +5,8 @@ const messageSchema = new Schema({
     author: {type: user.schema},
     timestamp: Date,
     translations: {
-        english: String
+        english: String,
+        //add extra translations
     }
 });
 
