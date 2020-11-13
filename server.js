@@ -6,11 +6,11 @@
 require('dotenv').config();
 const express = require("express");
 const app = express();
-const http = require('http').createServer(app);
 const router = express.Router();
 
 const auth = require('./routes/auth');
 const chat = require('./routes/chat');
+const rooms = require('./routes/rooms');
 
 const path = require('path');
 const mongoose = require('mongoose');
@@ -46,12 +46,17 @@ app.use(passport.session());
 
 app.use('/auth', auth);
 app.use('/chat', chat);
+app.use('/rooms', rooms);
 
 app.get("/", (req, res) => {
   res.render('index');
 });
 
+
+const http = require('http').createServer(app);
 // listen for requests :)
 const listener = http.listen(process.env.PORT, () => {
   console.log("Your app is listening on port " + process.env.PORT);
 });
+
+const websockets = require('./services/websockets')(http);
