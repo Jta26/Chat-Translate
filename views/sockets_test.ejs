@@ -7,15 +7,20 @@
 </head>
 <body>
     <h1>Hello websockets</h1>
+    <div class='contact-list'>
+
+    </div>
+    <div style='width: 450px; height: 500px; border: 1px solid red;' class='chat'>
+        <div style='height: 400px; overflow: scroll;'>
+
+        </div>
+        <div style='height: 100px; width: 100%; display: flex; flex-direction: row; justify-content: flex-start; align-items: center; border-top: 1px solid black;'>
+            <input style='flex: 1; height: 40px; margin: 10px; font-size: 1.2em;' type='text'/>
+            <button style='height: 40px; margin: 5px;'>Send</button>
+        </div>
+    </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('connect', () => {
-            console.log('Welcome to the websocket.');
-        });
-        socket.on('hello', (data) => {
-            console.log('This websocket has been pinged ' + data + ' times');
-        });
+    <script src='/js/websockets.js'>
     </script>
 </body>
 </html>

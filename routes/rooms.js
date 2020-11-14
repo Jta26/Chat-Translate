@@ -5,7 +5,9 @@ const {requiresAuth} = require('../services/auth');
 
 router.get('/test', requiresAuth, (req, res) => {
     res.render('sockets_test');
-})
+});
+
+
 
 
 
