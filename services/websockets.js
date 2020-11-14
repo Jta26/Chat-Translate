@@ -1,10 +1,39 @@
+require('dotenv').config();
+let io = require('socket.io')
+const passportSocketIo = require('passport.socketio');
+
+const User = require('../models/user');
+
+const onAuthSuccess = (data, accept) => {
+    console.log('succesfully connected to the socket auth.');
+
+    accept(null, true);
+}
+
+const onAuthFail = (data, msg, err, accept) => {
+    if (err) {
+        throw new Error(msg);
+    }
+
+    console.log('failed to connect', msg);
+
+    accept(null, false)
+
+}
+
 const defaultRoom = 'global';
-const rooms = ['global']
-module.exports = (server) => {
-    let io = require('socket.io')(server);
-    let connectedPeople = 0;
+const rooms = ['global'];
+let connectedPeople = 0;
+module.exports = (server, sessionStorage) => {
+    io = io(server);
+    io.use(passportSocketIo.authorize({
+        cookieParser: require('cookie-parser'),
+        secret: process.env.SECRET,
+        store: sessionStorage,
+        success: onAuthSuccess,
+        fail: onAuthFail
+    }));
     io.on('connection', socket => {
-        
         socket.emit('rooms', {
             rooms
         })
@@ -19,14 +48,18 @@ module.exports = (server) => {
         });
 
         socket.on('disconnect', (data) => {
-            socket.emit('disconnected');
+            
             connectedPeople--;
         });
 
         socket.on('message', (data) => {
-            console.log(data);
+            data.sender = socket.request.user.name;
+            data.timestamp = new Date();
+            console.log('new message sent:', data);
             socket.to(data.room).emit('message', data);
         })
 
     });
 }
+
+

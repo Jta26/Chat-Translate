@@ -4,7 +4,6 @@ let availableRooms;
 const socket = io();
 socket.on('connect', () => {
     console.log('You are connected to a websocket.');
-    
     socket.emit('join', {});
 
     socket.on('rooms', (data) => {
@@ -36,19 +35,27 @@ function sendMessage(room, message) {
     socket.emit('message', {room, message});
     console.log('emitted message to ' + room);
     recieveMessage({room, message});
+
+
+
 }
 
 
 function recieveMessage(data) {
+    if (!data.sender) {
+        data.sender = 'You';
+        data.timestamp = new Date();
+    }
     const newMsgElem = document.createElement('div');
     const newMsgText = document.createElement('p');
+    const senderText = document.createElement('span');
+    senderText.innerHTML = data.sender + ': ';
+    newMsgText.appendChild(senderText);
+    newMsgText.appendChild(document.createTextNode(data.message));
 
-    newMsgText.innerHTML = data.message;
-
+    newMsgElem.className = 'message';
     newMsgElem.appendChild(newMsgText);
 
     chatBox.appendChild(newMsgElem);
-
-
 }
 

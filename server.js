@@ -18,7 +18,7 @@ const bodyParser = require('body-parser');
 const {passport} = require('./services/auth');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
-
+const sessionStorage = new MongoStore({ mongooseConnection: mongoose.connection});
 const database = require('./services/database');
 
 // app.engine('ejs', require('ejs').renderFile);
@@ -37,7 +37,7 @@ app.use(session({
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
-  store: new MongoStore({ mongooseConnection: mongoose.connection})
+  store: sessionStorage
 }));
 
 app.use(passport.initialize());
@@ -59,4 +59,4 @@ const listener = http.listen(process.env.PORT, () => {
   console.log("Your app is listening on port " + process.env.PORT);
 });
 
-const websockets = require('./services/websockets')(http);
+const websockets = require('./services/websockets')(http, sessionStorage);
