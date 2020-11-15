@@ -49,6 +49,10 @@ module.exports = (server, sessionStorage) => {
             data.sender = socket.request.user.name;
             data.timestamp = new Date();
             //do translations here for the new message.
+            //save them to translations object like
+            // data.translations = {en-US: 'hello', de-DE: 'gutentaag', ja-JP: "こんにちは"}
+            // Codes are according to RFC 3066 https://tools.ietf.org/html/rfc3066
+            // full list: http://www.lingoes.net/en/translator/langcode.htm
             data.translation = {}
             const newMsg = new Message({author: socket.request.user._id, content: data.message, timestamp: data.timestamp, room: data.room, translation: data.translation})
             newMsg
