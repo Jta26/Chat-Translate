@@ -1,12 +1,10 @@
 require('dotenv').config();
 let io = require('socket.io')
 const passportSocketIo = require('passport.socketio');
-
-const User = require('../models/user');
+const Message = require('../models/message');
 
 const onAuthSuccess = (data, accept) => {
     console.log('succesfully connected to the socket auth.');
-
     accept(null, true);
 }
 
@@ -14,11 +12,8 @@ const onAuthFail = (data, msg, err, accept) => {
     if (err) {
         throw new Error(msg);
     }
-
     console.log('failed to connect', msg);
-
     accept(null, false)
-
 }
 
 const defaultRoom = 'global';
@@ -36,7 +31,7 @@ module.exports = (server, sessionStorage) => {
     io.on('connection', socket => {
         socket.emit('rooms', {
             rooms
-        })
+        });
 
         socket.on('join', (data) => {
             connectedPeople++;
@@ -44,21 +39,34 @@ module.exports = (server, sessionStorage) => {
             data.connected = connectedPeople;
             socket.join(data.room);
             socket.to(data.room).emit('join', data);
-
         });
 
-        socket.on('disconnect', (data) => {
-            
+        socket.on('disconnect', () => {
             connectedPeople--;
         });
 
         socket.on('message', (data) => {
             data.sender = socket.request.user.name;
             data.timestamp = new Date();
-            console.log('new message sent:', data);
-            socket.to(data.room).emit('message', data);
-        })
+            //do translations here for the new message.
+            data.translation = {}
+            const newMsg = new Message({author: socket.request.user._id, content: data.message, timestamp: data.timestamp, room: data.room, translation: data.translation})
+            newMsg
+            .save()
+            .then( async (message) => {
+                console.log('----------------------------\nnew message sent:', message);
+                await message.populate('author').execPopulate();
+                message = message.toObject();
+                // remove a bunch of things about the author we don't want to be sent to the client.
+                delete message.author.email_verified;
+                delete message.author._id;
+                delete message.author.password;
+                delete message.author.created_date;
+                delete message.author.email;
+                socket.to(message.room).emit('message', message);
+            });
 
+        })
     });
 }
 

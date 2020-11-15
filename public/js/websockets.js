@@ -17,9 +17,9 @@ socket.on('connect', () => {
     socket.on('join', (data) => {
         console.log('Someone has joined ' + data.room + '. There are currently ' + data.connected + ' people here.');
     });
-    socket.on('message', (data) => {
-        console.log(data);
-        recieveMessage(data);
+    socket.on('message', (message) => {
+        console.log(message);
+        recieveMessage(message);
     })
 });
 
@@ -34,24 +34,22 @@ sendMsgButton.addEventListener('click', (e) => {
 function sendMessage(room, message) {
     socket.emit('message', {room, message});
     console.log('emitted message to ' + room);
-    recieveMessage({room, message});
-
-
-
+    recieveMessage({room, content: message});
 }
 
-
 function recieveMessage(data) {
-    if (!data.sender) {
-        data.sender = 'You';
+    if (!data.author) {
+        data.author = {};
+        data.author.name = 'You';
         data.timestamp = new Date();
     }
     const newMsgElem = document.createElement('div');
     const newMsgText = document.createElement('p');
-    const senderText = document.createElement('span');
-    senderText.innerHTML = data.sender + ': ';
-    newMsgText.appendChild(senderText);
-    newMsgText.appendChild(document.createTextNode(data.message));
+    const authorText = document.createElement('span');
+    console.log(data.author);
+    authorText.innerHTML = data.author.name + ': ';
+    newMsgText.appendChild(authorText);
+    newMsgText.appendChild(document.createTextNode(data.content));
 
     newMsgElem.className = 'message';
     newMsgElem.appendChild(newMsgText);
