@@ -20,6 +20,8 @@ passport.use(
             if (!user) {
                 let name = req.body.name;
                 let locale = req.body.locale;
+                locale = locale.replace('_', '-');
+                console.log(locale)
                 if (name == null || locale == null) {
                     throw 'One or more values are missing';
                 }
