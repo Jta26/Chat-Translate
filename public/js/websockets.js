@@ -49,7 +49,7 @@ function recieveMessage(data) {
     console.log(data.author);
     authorText.innerHTML = data.author.name + ': ';
     newMsgText.appendChild(authorText);
-    newMsgText.appendChild(document.createTextNode(data.content));
+    newMsgText.appendChild(document.createTextNode(JSON.stringify(data.translations)));
 
     newMsgElem.className = 'message';
     newMsgElem.appendChild(newMsgText);
