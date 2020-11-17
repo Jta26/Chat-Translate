@@ -21,6 +21,9 @@ const MongoStore = require('connect-mongo')(session);
 const sessionStorage = new MongoStore({ mongooseConnection: mongoose.connection});
 const database = require('./services/database');
 
+//translation
+const translator = require('./services/translation');
+
 // app.engine('ejs', require('ejs').renderFile);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
