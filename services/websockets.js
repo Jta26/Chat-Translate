@@ -2,6 +2,7 @@ require('dotenv').config();
 let io = require('socket.io')
 const passportSocketIo = require('passport.socketio');
 const Message = require('../models/message');
+const { translateAll } = require('translation');
 
 const onAuthSuccess = (data, accept) => {
     console.log('succesfully connected to the socket auth.');
@@ -49,12 +50,12 @@ module.exports = (server, sessionStorage) => {
             data.sender = socket.request.user.name;
             data.timestamp = new Date();
             //do translations here for the new message.
-            //save them to translations object like
             // data.translations = {en-US: 'hello', de-DE: 'gutentaag', ja-JP: "こんにちは"}
+            data.translations = translateAll(socket.request.user.locale.split('-')[0], data.message)
+            data.translations[socket.request.user.locale] = data.message;
             // Codes are according to RFC 3066 https://tools.ietf.org/html/rfc3066
             // full list: http://www.lingoes.net/en/translator/langcode.htm
-            data.translation = {}
-            const newMsg = new Message({author: socket.request.user._id, content: data.message, timestamp: data.timestamp, room: data.room, translation: data.translation})
+            const newMsg = new Message({author: socket.request.user._id, timestamp: data.timestamp, room: data.room, translation: data.translation})
             newMsg
             .save()
             .then( async (message) => {
