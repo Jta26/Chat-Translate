@@ -4,7 +4,6 @@ let availableRooms;
 const socket = io();
 socket.on('connect', () => {
     console.log('You are connected to a websocket.');
-    
     socket.emit('join', {});
 
     socket.on('rooms', (data) => {
@@ -18,9 +17,9 @@ socket.on('connect', () => {
     socket.on('join', (data) => {
         console.log('Someone has joined ' + data.room + '. There are currently ' + data.connected + ' people here.');
     });
-    socket.on('message', (data) => {
-        console.log(data);
-        recieveMessage(data);
+    socket.on('message', (message) => {
+        console.log(message);
+        recieveMessage(message);
     })
 });
 
@@ -35,20 +34,26 @@ sendMsgButton.addEventListener('click', (e) => {
 function sendMessage(room, message) {
     socket.emit('message', {room, message});
     console.log('emitted message to ' + room);
-    recieveMessage({room, message});
+    recieveMessage({room, content: message});
 }
 
-
 function recieveMessage(data) {
+    if (!data.author) {
+        data.author = {};
+        data.author.name = 'You';
+        data.timestamp = new Date();
+    }
     const newMsgElem = document.createElement('div');
     const newMsgText = document.createElement('p');
+    const authorText = document.createElement('span');
+    console.log(data.author);
+    authorText.innerHTML = data.author.name + ': ';
+    newMsgText.appendChild(authorText);
+    newMsgText.appendChild(document.createTextNode(data.content));
 
-    newMsgText.innerHTML = data.message;
-
+    newMsgElem.className = 'message';
     newMsgElem.appendChild(newMsgText);
 
     chatBox.appendChild(newMsgElem);
-
-
 }
 
