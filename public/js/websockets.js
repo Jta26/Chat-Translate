@@ -1,5 +1,3 @@
-
-
 let availableRooms;
 const socket = io();
 socket.on('connect', () => {
@@ -34,10 +32,11 @@ sendMsgButton.addEventListener('click', (e) => {
 function sendMessage(room, message) {
     socket.emit('message', {room, message});
     console.log('emitted message to ' + room);
-    recieveMessage({room, content: message});
+    recieveMessage({room, translations: [{text: message, to: user.Locale.split('-')[0]}]});
 }
 
 function recieveMessage(data) {
+    const userLocale = user.Locale;
     if (!data.author) {
         data.author = {};
         data.author.name = 'You';
@@ -46,10 +45,15 @@ function recieveMessage(data) {
     const newMsgElem = document.createElement('div');
     const newMsgText = document.createElement('p');
     const authorText = document.createElement('span');
-    console.log(data.author);
+    console.log(data.translations);
+    const textForUser = data.translations.find((translation) => {
+        return translation.to == userLocale.split('-')[0];
+    }).text;
+    console.log(textForUser);
+
     authorText.innerHTML = data.author.name + ': ';
     newMsgText.appendChild(authorText);
-    newMsgText.appendChild(document.createTextNode(JSON.stringify(data.translations)));
+    newMsgText.appendChild(document.createTextNode(JSON.stringify(textForUser)));
 
     newMsgElem.className = 'message';
     newMsgElem.appendChild(newMsgText);

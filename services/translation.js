@@ -55,16 +55,12 @@ const translateText = (from, to, text) => {
             endpoint += ',' + lang;
         }
     }
-    console.log('hit2 '+endpoint);
 
     return fetch(endpoint, options)
     .then(function(res) {
         return res.json()
     }).then(function(data) {
-        for (let trans of data[0].translations) {
-            console.log(trans);
-        }
-        return data[0]
+        return data[0].translations;
     })
     .catch(function(err) {
         console.log(err);       

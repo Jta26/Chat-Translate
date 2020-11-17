@@ -11,6 +11,7 @@ const router = express.Router();
 const auth = require('./routes/auth');
 const chat = require('./routes/chat');
 const rooms = require('./routes/rooms');
+const user = require('./routes/user');
 
 const path = require('path');
 const mongoose = require('mongoose');
@@ -50,6 +51,7 @@ app.use(passport.session());
 app.use('/auth', auth);
 app.use('/chat', chat);
 app.use('/rooms', rooms);
+app.use('/user', user);
 
 app.get("/", (req, res) => {
   res.render('index');
