@@ -6,10 +6,7 @@ const messageSchema = new Schema({
     content: String,
     timestamp: Date,
     room: String,
-    translations: {
-        english: String,
-        //add extra translations
-    }
+    translations: Schema.Types.Mixed
 });
 
 messageSchema.statics.findAfterByTimestamp = function(timestamp) {
