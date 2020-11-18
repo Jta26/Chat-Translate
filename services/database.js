@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-
 function connect() {
   const connectionString =
   "mongodb+srv://" +
-  process.env.USER +
+  process.env.DBUSER +
   ":" +
-  process.env.PASSWORD +
+  process.env.DBPASSWORD +
   "@" +
-  process.env.HOST +
+  process.env.DBHOST +
   "/" +
   process.env.DATABASE +
   "?retryWrites=true&w=majority";
