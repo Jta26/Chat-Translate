@@ -1,20 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
-    <title>Welcome to Bridges</title>
-</head>
-<body class='dashboard'>
-    <div class='nav'>
-        <img class= "logo" src="/bridgesLogo.png" alt="">
-        <a href=''>Profile</a>
-        <a href=''>Groups</a>
-        <a href=''>Languages</a>
-        <a href=''>Logout</a>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Bridges</title>
+    
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/dashboard2.css">
+    
+    <!-- import the webpage's javascript file -->
+    <script src="/script.js" defer></script>
+  </head>  
+  <body>
+    <div id="chat-container">
+      <div id="search-container">
+        <input type="text" placeholder="Search"/>
+      </div>
+     
+      <div id="conversation-list">
+        <div class ="conversation active">
+          <img src="https://rb.gy/qnejtp" alt="My profile picture"/>
+
+          <div class="title-text"> 
+<!--             < %= User.name %> -->
+            John Doe
+          </div>
+          <div class="created-date">
+            Nov 15  
+          </div>
+          <div class="conversation-msg">
+            This is a message This is a message This is a message
+          </div>
+        
+        </div>
+        
+        <div class ="conversation active">
+          <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
+          <div class="title-text">
+            Alan Turing
+          </div>
+          <div class="created-date">
+            Nov 15  
+          </div>
+          <div class="conversation-msg">
+            This is a message This is a message This is a message
+          </div>
+        
+        </div>
+        
+        <div class ="conversation active">
+          <img src="https://rb.gy/qnejtp" alt="My profile picture"/>
+          <div class="title-text">
+            John Doe
+          </div>
+          <div class="created-date">
+            Nov 15  
+          </div>
+          <div class="conversation-msg">
+            This is a message This is a message This is a message
+          </div>
+        
+        </div>
+        
+
+        <div class ="conversation active">
+          <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
+          <div class="title-text">
+            Alan Turing
+          </div>
+          <div class="created-date">
+            Nov 15  
+          </div>
+          <div class="conversation-msg">
+            This is a message This is a message This is a message
+          </div>
+        
+        </div>
+        
+    
+        
+      </div>
+  
+      
+      <div id="new-msg-container">
+        <a hre="#">+</a>
+      </div>
+      
+      <div id="chat-title">
+        <span>John Doe</span>
+        
+      </div>
+      <div id="chat-message-list">
+        
+        <div class="message-row your-message">
+          <div class="message-content">
+            <div class="message-text"> Hello there </div>
+            <div class="message-time">Nov 15</div>  
+          </div>
+        </div>
+        
+        <div class="message-row others-message">
+          <div class="message-content">
+            <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
+            <div class="message-text"> Hi, morning </div>
+            <div class="message-time">Nov 16</div>
+          </div>
+        </div>
+          
+      </div>
+      <div id="chat-form">
+        <input type="text" placeholder="Type a message"/>
+        <img src="https://cdn.glitch.com/7ba8a16f-3425-484a-8d14-343cd0867e48%2Fdirect.png?v=1605673373920">
+      </div>
+
+  
+      
     </div>
-    <div class='contacts'></div>
-    <div class='chat'></div>
-</body>
+  </body>
 </html>
