@@ -5,9 +5,7 @@ const fetch = require("node-fetch");
 const langList = ['en','ja','es','de','ar'];
 
 const translateAll = (lang, text) => {
-    console.log('hit1 '+lang+' '+text);
     let to = langList.filter(function(value, index, arr){return value!=lang;});
-    console.log(to);
     return translateText(lang, to, text);
 }
 
@@ -20,7 +18,6 @@ function uuidv4() {
 }
 
 const translateText = (from, to, text) => {
-    console.log(from+':'+to+' '+text)
     // const endpoint = 'https://api.cognitive.microsofttranslator.com/';
     const subscriptionKey = process.env.TRANSLATION_KEY;
     // let endpoint = document.getElementById("endpoint").value;
