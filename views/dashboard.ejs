@@ -18,7 +18,9 @@
     <div id="chat-container">
       
       <div id="search-container">
-        <input type="text" placeholder="Search"/>
+        <div class='m-hamburger-close'>
+          <img src='/hamburgerClose.png'>
+        </div>
       </div>
      
       <div id="conversation-list">
@@ -31,6 +33,7 @@
       </div>
       
       <div id="chat-title">
+        <div class='m-hamburger'><img src='/hamburger.png'></div>
         <span></span>
         <select name="Language Select" id="language-select">
           <option value="" selected="selected">Select Language</option>
@@ -50,5 +53,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src='/js/user.js'></script>
     <script src='/js/translations.js'></script>
+    <script src='/js/hamburger.js'></script>
   </body>
 </html>

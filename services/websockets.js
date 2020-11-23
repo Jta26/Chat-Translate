@@ -71,7 +71,7 @@ module.exports = (server, sessionStorage) => {
         socket.on('message', async (data) => {
             data.sender = socket.request.user.name;
             data.timestamp = new Date();
-            data.original_language = socket.request.user.locale.split('-')[0];
+            data.original_language = socket.request.user.locale;
             //do translations here for the new message.
             // data.translations = {en-US: 'hello', de-DE: 'gutentaag', ja-JP: "こんにちは"}
             data.translations = await translateAll(data.original_language, data.message);

@@ -55,7 +55,7 @@ async function joinRoom(userObj) {
 function sendMessage(room, message) {
     socket.emit('message', {room, message});
     console.log('emitted message to ' + room);
-    recieveMessage({room: room.email, translations: [{text: message, to: user.Locale.split('-')[0]}]});
+    recieveMessage({room: room.email, translations: [{text: message, to: user.Locale}]});
 }
 
 function recieveSeverMessage(message) {
@@ -103,9 +103,17 @@ function recieveMessage(data) {
     msgTime.className = 'message-time';
 
     console.log(data.translations);
-    const textForUser = data.translations.find((translation) => {
-        return translation.to == userLocale.split('-')[0];
-    }).text;
+    let textForUser;
+    try {
+        textForUser = data.translations.find((translation) => {
+            return translation.to == userLocale;
+        }).text;
+    }
+    catch {
+        textForUser = data.translations.find((translation) => {
+            return translation.to == 'en';
+        }).text;
+    }
     console.log(textForUser);
 
     msgTextp = document.createElement('p');
