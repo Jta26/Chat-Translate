@@ -2,6 +2,7 @@ const { response } = require("express");
 const fetch = require("node-fetch");
 
 // Language List: https://docs.microsoft.com/en-us/azure/cognitive-services/translator/language-support
+// if chang language support here must also add to language map in /public/js/translation.js, /services/users.js => TranslationsMap
 const langList = ['en','ja','es','de','ar'];
 
 const translateAll = (lang, text) => {
