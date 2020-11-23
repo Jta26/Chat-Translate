@@ -3,9 +3,9 @@ let io = require('socket.io')
 const passportSocketIo = require('passport.socketio');
 const Message = require('../models/message');
 const { translateAll } = require('./translation');
-
+const { getRoomID } = require('./rooms');
 const onAuthSuccess = (data, accept) => {
-    console.log('succesfully connected to the socket auth.');
+    console.log(`Successfully connected authenticated user ${data.user.email} to the websockets.`);
     accept(null, true);
 }
 
@@ -18,8 +18,10 @@ const onAuthFail = (data, msg, err, accept) => {
 }
 
 const defaultRoom = 'global';
-const rooms = ['global'];
-let connectedPeople = 0;
+let connectedPeople = {
+    'global': 'global'
+};
+
 module.exports = (server, sessionStorage) => {
     io = io(server);
     io.use(passportSocketIo.authorize({
@@ -30,35 +32,58 @@ module.exports = (server, sessionStorage) => {
         fail: onAuthFail
     }));
     io.on('connection', socket => {
-        socket.emit('rooms', {
-            rooms
-        });
+        socket.join('rooms_data');
+        const joinedUser = socket.request.user;
+        connectedPeople[joinedUser.email] = joinedUser;
+        io.in('rooms_data').emit('rooms', {'rooms':connectedPeople});
 
-        socket.on('join', (data) => {
-            connectedPeople++;
-            data.room = defaultRoom;
-            data.connected = connectedPeople;
+        socket.on('join', (data) => {   
+            toUser = data.room.email || 'global'; 
+            socket.leaveAll();
+            if (!data.room || data.room.name == 'Global') {
+                data.room = defaultRoom;
+            }
+            else {
+                data.room = getRoomID([socket.request.user, data.room]);
+            }
             socket.join(data.room);
+            console.log(`${joinedUser.email} is talking to ${toUser} in room ${data.room}`);
             socket.to(data.room).emit('join', data);
         });
 
         socket.on('disconnect', () => {
-            connectedPeople--;
+            const disconnectedUser = socket.request.user.email;
+            console.log(`${disconnectedUser} Left ${socket.rooms}`);
+            delete connectedPeople[disconnectedUser];
+            io.in('rooms_data').emit('rooms', {'rooms': connectedPeople});
         });
 
         socket.on('message', async (data) => {
             data.sender = socket.request.user.name;
             data.timestamp = new Date();
+            data.original_language = socket.request.user.locale.split('-')[0];
             //do translations here for the new message.
             // data.translations = {en-US: 'hello', de-DE: 'gutentaag', ja-JP: "こんにちは"}
-            data.translations = await translateAll(socket.request.user.locale.split('-')[0], data.message);
-            console.log(data);
-            data.translations.push({text: data.message, to: socket.request.user.locale.split('-')[0]});
-            console.log(data.translations);
+            data.translations = await translateAll(data.original_language, data.message);
+            data.translations.push({text: data.message, to: data.original_language});
             // Codes are according to RFC 3066 https://tools.ietf.org/html/rfc3066
             // full list: http://www.lingoes.net/en/translator/langcode.htm
-            const newMsg = new Message({author: socket.request.user._id, timestamp: data.timestamp, room: data.room, translations: data.translations})
-            newMsg
+
+            if (!data.room || data.room.email == 'global') {
+                data.room = 'global';
+            }
+            else {
+                console.log(socket.request.user.email)
+                data.room = getRoomID([socket.request.user, data.room])
+            }
+            console.log(socket.rooms);
+            const newMsg = new Message({
+                author: socket.request.user._id, 
+                timestamp: data.timestamp, 
+                room: data.room, 
+                original_language: data.original_language, 
+                translations: data.translations
+            })
             .save()
             .then( async (message) => {
                 console.log('----------------------------\nnew message sent:', message);
@@ -69,10 +94,8 @@ module.exports = (server, sessionStorage) => {
                 delete message.author._id;
                 delete message.author.password;
                 delete message.author.created_date;
-                delete message.author.email;
                 socket.to(message.room).emit('message', message);
             });
-
         })
     });
 }

@@ -63,7 +63,7 @@ body {
 
 #conversation-list {
   grid-area: conversation-list;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .conversation {
@@ -182,10 +182,30 @@ body {
   padding-left: 42px;
   padding-right: 22px;
 }
-#chat-form > img {
-  width: 45px;
+
+#chat-form > button {
+  border: none;
   margin-left: 10px;
+  padding: 10px;
 }
+  #chat-form > button:focus {
+    border: none;
+    outline: none;
+  }
+  #chat-form > button:hover {
+    cursor: pointer;
+    background-color: #7269ef;
+    border-radius: 10px;
+  }
+
+  #chat-form > button > img {
+    width: 40px;
+    
+
+  }
+    #chat-form > button:hover > img {
+      filter: invert(1);
+    } 
 
 .message-row {
   margin-bottom: 20px;
@@ -222,7 +242,7 @@ body {
 }
 
 .message-time {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #777;
 }
 
@@ -230,6 +250,7 @@ body {
   padding: 9px 14px;
   font-size: 1.6rem;
   margin-bottom: 5px;
+  line-height: 1.6rem;
 }
 
 .your-message .message-text {
@@ -258,3 +279,7 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+
+
+
+

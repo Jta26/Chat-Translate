@@ -16,108 +16,37 @@
   </head>  
   <body>
     <div id="chat-container">
+      
       <div id="search-container">
         <input type="text" placeholder="Search"/>
       </div>
      
       <div id="conversation-list">
-        <div class ="conversation active">
-          <img src="https://rb.gy/qnejtp" alt="My profile picture"/>
 
-          <div class="title-text"> 
-<!--             < %= User.name %> -->
-            John Doe
-          </div>
-          <div class="created-date">
-            Nov 15  
-          </div>
-          <div class="conversation-msg">
-            This is a message This is a message This is a message
-          </div>
-        
-        </div>
-        
-        <div class ="conversation active">
-          <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
-          <div class="title-text">
-            Alan Turing
-          </div>
-          <div class="created-date">
-            Nov 15  
-          </div>
-          <div class="conversation-msg">
-            This is a message This is a message This is a message
-          </div>
-        
-        </div>
-        
-        <div class ="conversation active">
-          <img src="https://rb.gy/qnejtp" alt="My profile picture"/>
-          <div class="title-text">
-            John Doe
-          </div>
-          <div class="created-date">
-            Nov 15  
-          </div>
-          <div class="conversation-msg">
-            This is a message This is a message This is a message
-          </div>
-        
-        </div>
-        
-
-        <div class ="conversation active">
-          <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
-          <div class="title-text">
-            Alan Turing
-          </div>
-          <div class="created-date">
-            Nov 15  
-          </div>
-          <div class="conversation-msg">
-            This is a message This is a message This is a message
-          </div>
-        
-        </div>
-        
-    
-        
       </div>
   
       
       <div id="new-msg-container">
         <a hre="#">+</a>
+        <a hre="#"></a>
+        <a hre="#"></a>
       </div>
       
       <div id="chat-title">
-        <span>John Doe</span>
+        <span></span>
         
       </div>
       <div id="chat-message-list">
-        
-        <div class="message-row your-message">
-          <div class="message-content">
-            <div class="message-text"> Hello there </div>
-            <div class="message-time">Nov 15</div>  
-          </div>
-        </div>
-        
-        <div class="message-row others-message">
-          <div class="message-content">
-            <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
-            <div class="message-text"> Hi, morning </div>
-            <div class="message-time">Nov 16</div>
-          </div>
-        </div>
-          
-      </div>
-      <div id="chat-form">
-        <input type="text" placeholder="Type a message"/>
-        <img src="https://cdn.glitch.com/7ba8a16f-3425-484a-8d14-343cd0867e48%2Fdirect.png?v=1605673373920">
+
       </div>
 
-  
-      
+      <div id="chat-form">
+        <input type="text" placeholder="Type a message"/>
+        <button><img src="https://cdn.glitch.com/7ba8a16f-3425-484a-8d14-343cd0867e48%2Fdirect.png?v=1605673373920"></button>
+      </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src='/js/user.js'></script>
   </body>
 </html>
