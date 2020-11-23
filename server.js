@@ -12,11 +12,13 @@ const auth = require('./routes/auth');
 const chat = require('./routes/chat');
 const rooms = require('./routes/rooms');
 const user = require('./routes/user');
+const messages = require('./routes/messages');
 
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const {passport} = require('./services/auth');
+
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const sessionStorage = new MongoStore({ mongooseConnection: mongoose.connection});
@@ -52,6 +54,7 @@ app.use('/auth', auth);
 app.use('/chat', chat);
 app.use('/rooms', rooms);
 app.use('/user', user);
+app.use('/messages', messages);
 
 app.get("/", (req, res) => {
   res.render('index');

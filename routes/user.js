@@ -11,5 +11,10 @@ router.get('/data', requiresAuth, (req, res) => {
     res.json(user);
 });
 
+router.get('/logout', requiresAuth, (req, res) => {
+    req.logout();
+    res.redirect('/');
+})
+
 
 module.exports = router;
