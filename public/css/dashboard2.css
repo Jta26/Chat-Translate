@@ -349,12 +349,45 @@ body {
   font-size:1.1em;
   text-align: center;
 }
-
-
+.m-hamburger {
+  display: none;
+}
+.m-hamburger-close {
+  display: none;
+}
 
 @media (max-width: 768px) {
+  body  {
+    padding:0;
+    margin: 0;
+  }
+  #chat-container {
+    height: 98vh;
+  }
+  #conversation-list, #search-container, #new-msg-container {
+    display: none;
+  }
 
-  #conversation-list {display: none;}
-
-
+  #chat-title, #chat-message-list, #chat-form {
+    grid-column: span 2;
+  }
+  .m-hamburger {
+    display: block;
+  }
+    .m-hamburger > img {
+      width: 35px;
+      filter: invert(.1);
+    }
+  .m-hamburger-close {
+    display: block;
+  }
+    .m-hamburger-close > img {
+      width: 35px;
+    }
+  #chat-title {
+    font-size: 1.9em;
+  }
+  .message-text p {
+    font-size: 1.5em;
+  }
 }

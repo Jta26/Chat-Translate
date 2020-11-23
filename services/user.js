@@ -1,8 +1,7 @@
+const User = require('../models/user');
 
 
-
-
-
-function createUser() {
+function updateUserLanguage(user, language) {
     
+
 }
