@@ -3,7 +3,7 @@ const socket = io();
 const chatBox = document.querySelector('#chat-message-list');
 const sendMsgButton = document.querySelector('#chat-form > button');
 const conversationList = document.querySelector('#conversation-list');
-const chatTitle = document.querySelector('#chat-title');
+const chatTitle = document.querySelector('#chat-title span');
 const chatInput = document.querySelector('#chat-form input');
 
 let currentRoom;

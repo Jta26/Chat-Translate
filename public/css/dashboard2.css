@@ -122,23 +122,38 @@ body {
 }
 
 #new-msg-container {
-  display: grid;
-  grid: 40px/40px;
-  align-content: center;
-  grid-area: new-msg-container;
   border-top: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 0 0 0 10px;
+  background-color: #eee;
   padding: 0 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#new-message-container a {
-  display: grid;
-  place-content: center center;
+  #new-msg-container > .logout {
   background: #eee;
-  border-radius: 100%;
-  color: #002C88;
+  border-radius: 10px;
   text-decoration: none;
-  font-size: 3.6rem;
+  font-size: 2em;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  color: #000;
+}
+  #new-msg-container > .logout:hover {
+    background-color: #7269ef;
+    cursor: pointer;
+    color: white;
+  }
+  #new-msg-container > .logout:hover > img {
+    filter: invert(1)
+  }
+#new-msg-container > .logout > img {
+  width: 20%;
+  margin-left: 10px;
 }
 
 #chat-title,
@@ -147,8 +162,8 @@ body {
 }
 
 #chat-title {
-  display: grid;
-  grid: 36px/1fr 36px;
+  display: flex;
+  justify-content: space-between;
   align-content: center;
   align-items: center;
   grid-area: chat-title;
@@ -337,3 +352,9 @@ body {
 
 
 
+@media (max-width: 768px) {
+
+  #conversation-list {display: none;}
+
+
+}
