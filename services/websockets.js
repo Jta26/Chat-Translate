@@ -39,9 +39,13 @@ module.exports = (server, sessionStorage) => {
 
         socket.on('join', (data) => {   
             toUser = data.room.email || 'global'; 
-            socket.leaveAll();
+            for (let room in socket.rooms) {
+                room == 'rooms_data' ? null : socket.leave(room);
+            }
             if (!data.room || data.room.name == 'Global') {
                 data.room = defaultRoom;
+                connectedPeople[joinedUser.email] = joinedUser;
+                io.in('rooms_data').emit('rooms', {'rooms':connectedPeople});
             }
             else {
                 data.room = getRoomID([socket.request.user, data.room]);
@@ -54,8 +58,9 @@ module.exports = (server, sessionStorage) => {
 
         socket.on('disconnect', () => {
             const disconnectedUser = socket.request.user.email;
-            console.log(`${disconnectedUser} Left ${socket.rooms}`);
+            console.log(`${disconnectedUser} disconnected`);
             delete connectedPeople[disconnectedUser];
+            console.log(socket.rooms);
             io.in('rooms_data').emit('rooms', {'rooms': connectedPeople});
         });
 
