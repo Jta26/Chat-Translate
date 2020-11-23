@@ -2,7 +2,7 @@ const { response } = require("express");
 const fetch = require("node-fetch");
 
 // Language List: https://docs.microsoft.com/en-us/azure/cognitive-services/translator/language-support
-const langList = ['en','ja','es','de','ar'];
+const langList = ['en','ja','es','de','ar','ca', 'zh-Hans'];
 
 const translateAll = (lang, text) => {
     let to = langList.filter(function(value, index, arr){return value!=lang;});
@@ -52,11 +52,12 @@ const translateText = (from, to, text) => {
             endpoint += ',' + lang;
         }
     }
-
+    console.log(endpoint);
     return fetch(endpoint, options)
     .then(function(res) {
         return res.json()
     }).then(function(data) {
+        console.log(data);
         return data[0].translations;
     })
     .catch(function(err) {
