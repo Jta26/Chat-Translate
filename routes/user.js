@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {requiresAuth} = require('../services/auth');
+const {updateUserLanguage} = require('../services/user');
 
 // sends the data of the currently signed in user.
 router.get('/data', requiresAuth, (req, res) => {
@@ -16,5 +17,18 @@ router.get('/logout', requiresAuth, (req, res) => {
     res.redirect('/');
 })
 
+// change language preferences
+router.put('/updateLang', requiresAuth, (req, res) => {
+    let user = req.user;
+    let language = req.body.language;
+    updateUserLanguage(user, language).then((update) => {
+        if (update) {
+            res.status(200).send();
+        }
+        else {
+            res.status(401).send()
+        }
+    });
+})
 
 module.exports = router;
