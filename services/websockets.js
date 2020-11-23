@@ -47,7 +47,8 @@ module.exports = (server, sessionStorage) => {
                 data.room = getRoomID([socket.request.user, data.room]);
             }
             socket.join(data.room);
-            console.log(`${joinedUser.email} is talking to ${toUser} in room ${data.room}`);
+            data.serverMessage = `${joinedUser.email} is talking to ${toUser} in room ${data.room}`;
+            console.log(data.serverMessage);
             socket.to(data.room).emit('join', data);
         });
 

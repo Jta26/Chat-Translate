@@ -4,6 +4,7 @@ const chatBox = document.querySelector('#chat-message-list');
 const sendMsgButton = document.querySelector('#chat-form > button');
 const conversationList = document.querySelector('#conversation-list');
 const chatTitle = document.querySelector('#chat-title');
+const chatInput = document.querySelector('#chat-form input');
 
 let currentRoom;
 
@@ -15,13 +16,24 @@ sendMsgButton.addEventListener('click', (e) => {
     msgBox.value = '';
 });
 
+chatInput.addEventListener('keyup', (e) => {
+    // if the enter key is pressed when focused on the input
+    if (e.keyCode == 13) {
+        e.preventDefault();
+        const msgBox = e.currentTarget;
+        sendMessage(currentRoom, msgBox.value);
+        msgBox.value = '';
+    }
+})
+
+
 
 function joinRoom(userObj) {
     console.log('Joining room with ' + userObj.email);
     socket.emit('join', {room: userObj});
     chatTitle.innerHTML = userObj.name;
     currentRoom = userObj;
-    chatBox.innerHTML = ''
+    chatBox.innerHTML = '';
 }
 
 function sendMessage(room, message) {
@@ -30,12 +42,19 @@ function sendMessage(room, message) {
     recieveMessage({room: room.email, translations: [{text: message, to: user.Locale.split('-')[0]}]});
 }
 
+function recieveSeverMessage(message) {
+    const serverMsgElem = document.createElement('p');
+    serverMsgElem.className = 'server-message';
+    serverMsgElem.innerHTML = message;
+    chatBox.prepend(serverMsgElem);
+}
 
 function recieveMessage(data) {
     // This is what a message should be in html
     //   <div class="message-row others-message">
     //     <div class="message-content">
     //       <img src="https://rb.gy/dzev5z" alt="My profile picture"/>
+    //       <p class='message-user'>Joel Austin</p>
     //       <div class="message-text"> Hi, morning </div>
     //       <div class="message-time">Nov 16</div>
     //     </div>
@@ -50,11 +69,16 @@ function recieveMessage(data) {
     newMsgElem.className = 'message-row';
     newMsgElem.className = newMsgElem.className + ' ' + (data.author.name == user.Name ? 'your-message' : 'others-message');
 
+
     const newMsgContentElem = document.createElement('div');
     newMsgContentElem.className = 'message-content';
 
     const authorImg = document.createElement('img');
     authorImg.src = 'https://rb.gy/dzev5z';
+
+    const userName = document.createElement('p');
+    userName.className = 'message-user';
+    userName.innerHTML = data.author.name;
 
     const msgText = document.createElement('div');
     msgText.className = 'message-text';
@@ -68,14 +92,19 @@ function recieveMessage(data) {
     }).text;
     console.log(textForUser);
 
-    msgText.appendChild(document.createTextNode(JSON.stringify(textForUser)));
+    msgText.appendChild(document.createTextNode(textForUser));
     msgTime.appendChild(document.createTextNode(moment(data.timestamp).format('MMM DD, YYYY')));
 
     if (data.author.name != user.Name) {
-        newMsgContentElem.appendChild(authorImg);
+        const fromContent = document.createElement('div');
+        fromContent.appendChild(authorImg);
+        fromContent.appendChild(userName);
+        fromContent.className = 'from-container';
+        newMsgContentElem.appendChild(fromContent);
+        
     }
-    newMsgContentElem.appendChild(msgText)
-    newMsgContentElem.appendChild(msgTime)
+    newMsgContentElem.appendChild(msgText);
+    newMsgContentElem.appendChild(msgTime);
 
     newMsgElem.appendChild(newMsgContentElem);
 
@@ -134,7 +163,8 @@ socket.on('connect', () => {
     });
 
     socket.on('join', (data) => {
-        console.log('Someone has joined ' + data.room + '. There are currently ' + data.connected + ' people here.');
+        console.log(data.serverMessage);
+        recieveSeverMessage(data.serverMessage);
         
     });
     socket.on('message', (message) => {

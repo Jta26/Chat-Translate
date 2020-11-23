@@ -231,19 +231,37 @@ body {
 }
 
 .others-message .message-content {
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: 100px 1fr;
   grid-column-gap: 15px;
+  justify-content: center;
+  align-items: center;
 }
+  .others-message .message-content .from-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    grid-column: span 2;
+  }
+  .others-message > .message-content > .from-container > p {
+    margin-left: 10px;
+  }
 
 .message-row img {
   border-radius: 100%;
-  grid-row: span 2;
+  grid-row: span 1;
+  grid-column: span 1;
   height: 40px;
+  text-align: center;
 }
 
 .message-time {
   font-size: 1.1rem;
   color: #777;
+  grid-column: span 2;
+}
+
+.message-user {
+  font-size: 1.7em;
 }
 
 .message-text {
@@ -251,6 +269,10 @@ body {
   font-size: 1.6rem;
   margin-bottom: 5px;
   line-height: 1.6rem;
+  grid-column: span 2;
+  word-wrap: break-word;   
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .your-message .message-text {
@@ -274,6 +296,12 @@ body {
   color: #330;
   border-radius: 25px;
   font-size: 1.4rem;
+}
+
+.server-message {
+  color: grey;
+  font-size:1.1em;
+  text-align: center;
 }
 
 ::-webkit-scrollbar {
