@@ -28,12 +28,28 @@ chatInput.addEventListener('keyup', (e) => {
 
 
 
-function joinRoom(userObj) {
+async function joinRoom(userObj) {
     console.log('Joining room with ' + userObj.email);
     socket.emit('join', {room: userObj});
     chatTitle.innerHTML = userObj.name;
     currentRoom = userObj;
     chatBox.innerHTML = '';
+    console.log('user', userObj);
+    const messageResponse = await fetch('/messages/', {
+        method: 'POST',
+        body: JSON.stringify(userObj),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    const messages = await messageResponse.json();
+
+    for (let msg of messages) {
+        recieveMessage(msg);
+    }
+
+
+
 }
 
 function sendMessage(room, message) {
@@ -109,6 +125,8 @@ function recieveMessage(data) {
     newMsgElem.appendChild(newMsgContentElem);
 
     chatBox.prepend(newMsgElem);
+    //Set the scroll to the bottom;
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 function addUser(userObj) {
