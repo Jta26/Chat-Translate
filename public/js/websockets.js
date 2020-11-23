@@ -108,8 +108,14 @@ function recieveMessage(data) {
     }).text;
     console.log(textForUser);
 
-    msgText.appendChild(document.createTextNode(textForUser));
+    msgTextp = document.createElement('p');
+    msgTextp.innerHTML = textForUser;
+    msgText.appendChild(msgTextp);
     msgTime.appendChild(document.createTextNode(moment(data.timestamp).format('MMM DD, YYYY')));
+
+    const translationToolTip = createTranslationToolTip(data.translations);
+    console.log(translationToolTip);
+    msgText.appendChild(translationToolTip);
 
     if (data.author.name != user.Name) {
         const fromContent = document.createElement('div');
@@ -127,6 +133,21 @@ function recieveMessage(data) {
     chatBox.prepend(newMsgElem);
     //Set the scroll to the bottom;
     chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function createTranslationToolTip(translations) {
+    const toolTipElem = document.createElement('div');
+    toolTipElem.className = 'translation-tooltip';
+    const toolTipTitle = document.createElement('h3');
+    toolTipElem.appendChild(toolTipTitle);
+    toolTipTitle.innerHTML = 'Other translations';
+    for (let translation of translations) {
+        const translationText = document.createElement('p');
+        translationText.innerHTML = `<b>${TranslationsMap[translation.to]}</b>: ${translation.text}`;
+        toolTipElem.appendChild(translationText);
+    }
+
+    return toolTipElem;
 }
 
 function addUser(userObj) {

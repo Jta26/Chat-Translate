@@ -34,6 +34,10 @@ module.exports = (server, sessionStorage) => {
     io.on('connection', socket => {
         socket.join('rooms_data');
         const joinedUser = socket.request.user;
+        delete joinedUser.password;
+        delete joinedUser.email_verified;
+        delete joinedUser._id;
+        delete joinedUser.created_date;
         connectedPeople[joinedUser.email] = joinedUser;
         io.in('rooms_data').emit('rooms', {'rooms':connectedPeople});
 
