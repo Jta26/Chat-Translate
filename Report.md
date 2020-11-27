@@ -32,11 +32,53 @@ router.post('/', (req, res) => {
 });
 ```
 
-Add sessions snippet:
+Sessions are implemented automatically using express-session and a MongoStore.
 ```
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const sessionStorage = new MongoStore({ mongooseConnection: mongoose.connection});
 ```
-web socket snippet - through Socket.io
+
+Below is an example of a socket.io event listener for when the "message" event is emitted from the client.
 ```
+       socket.on('message', async (data) => {
+            data.sender = socket.request.user.name;
+            data.timestamp = new Date();
+            data.original_language = socket.request.user.locale;
+            //do translations here for the new message.
+            // data.translations = {en-US: 'hello', de-DE: 'gutentaag', ja-JP: "こんにちは"}
+            data.translations = await translateAll(data.original_language, data.message);
+            data.translations.push({text: data.message, to: data.original_language});
+            // Codes are according to RFC 3066 https://tools.ietf.org/html/rfc3066
+            // full list: http://www.lingoes.net/en/translator/langcode.htm
+
+            if (!data.room || data.room.email == 'global') {
+                data.room = 'global';
+            }
+            else {
+                console.log(socket.request.user.email)
+                data.room = getRoomID([socket.request.user, data.room])
+            }
+            console.log(socket.rooms);
+            const newMsg = new Message({
+                author: socket.request.user._id, 
+                timestamp: data.timestamp, 
+                room: data.room, 
+                original_language: data.original_language, 
+                translations: data.translations
+            })
+            .save()
+            .then( async (message) => {
+                console.log('----------------------------\nnew message sent:', message);
+                await message.populate('author').execPopulate();
+                message = message.toObject();
+                // remove a bunch of things about the author we don't want to be sent to the client.
+                delete message.author.email_verified;
+                delete message.author._id;
+                delete message.author.password;
+                delete message.author.created_date;
+                socket.to(message.room).emit('message', message);
+            });
 ```
 ## Accessibility:
 ### Perceivable
