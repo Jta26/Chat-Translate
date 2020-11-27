@@ -4,6 +4,16 @@ Joel Austin, Jose Zindia, Kinori Rosnow </h1>
 ## Introduction:
 Bridges Chat Translator is a project for Pitt MSIS class Network and Web Data Technologies. It is a cross-language live-messaging app that enables users that speak two different languages to have their messages auto translated via the azure translation API. This report describes our backend, frontend and database systems. We conclude the report with our roles in this project.
 
+## Frontend:
+Frontend:
+EJS/HTML
+CSS
+Bootstrap
+JavaScript
+
+The front end was implemented as follows: We created the login/signup pages using EJS and CSS to enable the users to access the web application. Login and Sign up pages were implemented in EJS and bootstrap. Whenever, the user’s login or signup, they were directed to the main dashboard which had the following which had a list with the names of the members on the chat and  chat box for sending and viewing messages.
+
+
 ## Backend:
 Our backend is hosted by a server that handles the user and chat data. The server routes requests and provides requested data back to the client. Sessions are managed by the server. The chat rooms are managed using web sockets that were leveraged from Socket.io.    
 
@@ -80,6 +90,19 @@ Below is an example of a socket.io event listener for when the "message" event i
                 socket.to(message.room).emit('message', message);
             });
 ```
+
+## Database
+The database is a MongoDB instance with 3 collections.
+1. user
+2. sessions
+3. messages
+
+The user collection contains the information about the user including their language selection. Passwords are also hashed using bcrypt.
+
+The sessions collection contains information to make the server statefully aware of each user that chats using the app. This is automatically populated with `express-session` and `MongoStore`.
+
+the messages collection contains a record of all the messages sent using the app, as well as the translations into our supported languages.
+
 ## Accessibility:
 ### Perceivable
 We aimed to make font easily readable for users without having to zoom in. For the visually impaired users, all text on the web app is simple so parsers should have no issues. There is not a gaurantee that the chat messages themselves are easy to parse as we cannot control the language of the messages.
@@ -156,13 +179,6 @@ passport.use(
     })
 );
 ```
-
-Jose:
-Documentation of how your database and database access was implemented
-Documentation of what you used to implement the front-end, including any technology used for styling of the front-end (e.g. Bootstrap)
-Documentation on any access control implemented in your application
-    signed in or not signed in
-
 
 ## Error Handling
 
@@ -265,3 +281,4 @@ function generateHash(string) {
 
 I also worked on implementing the authentication on the backend for the site using passport.
 
+## Jose
