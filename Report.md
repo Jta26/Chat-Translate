@@ -265,3 +265,10 @@ function generateHash(string) {
 
 I also worked on implementing the authentication on the backend for the site using passport.
 
+#### Jose Zindia
+For this project, we worked on almost every bit of the project, but I mainly focused on the front-end user interface: My work mainly focused a lot on the design and usability of the web app.  I used EJS and CSS/JS to create and render the following HTML pages:
+- The Login and sign-up page: To allow user sign up and login.
+- The chat dashboard: To allow users to access
+- I also worked on the user model and the server to get the app running. 
+ 
+
