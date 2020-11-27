@@ -122,11 +122,6 @@ Documentation on any access control implemented in your application
     signed in or not signed in
 
 
-Joel
-Full documentation of what framework or external code you used
-Documentation of how Error handling is supported in your application
-Mobile/responsive design was implemented and what limitation your project has with respect to accessibility requirement and responsive design
-
 ## Error Handling
 
 In general, our application contains most of it's error handling on the server side surrounding the authentication, however there is also client side form-validation for the login and signup pages.
