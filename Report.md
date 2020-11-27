@@ -1,12 +1,11 @@
-For all the documentation requirement, please include sample code in your report with description of the code does, just partial code is enough.
+<h1 align="center"> Final Project Report: Bridges <br><br> 
+Joel Austin, Jose Zindia, Kinori Rosnow </h1>
 
-Your report should be a PDF document.  The full submission should be a zipfile and only one submission per group
+## Introduction:
+Bridges Chat Translator is a project for Pitt MSIS class Network and Web Data Technologies. It is a cross-language live-messaging app that enables users that speak two different languages to have their messages auto translated via the azure translation API. This report describes our backend, frontend and database systems. We conclude the report with our roles in this project.
 
-Kinori:
 ## Backend:
-Our backend is hosted by a server that handles the user and chat data. The server routes requests and provides requested data back to the client. Sessions are managed by the server. The chat rooms are managed using web sockets that were leveraged from Socket.io.
-    server side routing
-    
+Our backend is hosted by a server that handles the user and chat data. The server routes requests and provides requested data back to the client. Sessions are managed by the server. The chat rooms are managed using web sockets that were leveraged from Socket.io.    
 
 Here is an example of a route on the server side. This code is used to get messages for a chat room.
 ```
@@ -68,4 +67,7 @@ Full documentation of what framework or external code you used
 Documentation of how Error handling is supported in your application
 Mobile/responsive design was implemented and what limitation your project has with respect to accessibility requirement and responsive design
 
-Member Roles:
+### Member Roles:
+We defined our roles based on ownership of functionality. We started the project with specific roles, but as the project progressed and we periodically worked together on calls, the lines of our work were blurred. Below we describe our part of the project.
+#### Kinori Rosnow: 
+My role for this project was handling the language translations and the language data interactions. A core of the site is the translation of language where we leveraged Microsoft's Azure Translation API to translate to every language we support. The translation capabilities are limited by the Azure Translation API capability. The messages are stored in every language supported to maximize speed efficiency with a tradeoff with space. For the message database schema I had the message all stored in the same dictionary so the backend interactions could all be the same. The original message language was stored in the schema separately. To be specific my front end work was the language selection drop down in the top right of the screen. Most of my work; however was on the back end. I routed the requests for the change of language selection to the server which update the user information `Locale` in the database. The client side would then request the messages in the new language. My part of the system does have a possible flaw in that if a user's `Locale` in the database differed from their keyboard language, there may be a way to trick the system into storing the wrong original language of the message in the database. Given more time I would be interested in addressing this to combat potential malicious users. Although I'm not sure the full extent of the possible harm yet as the translation API can detect correct languages and our system doesn't depend on the language except for what it displays to the users. We do not think this is a security issue.
