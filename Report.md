@@ -55,6 +55,60 @@ There are some limitations of the accisibility of the website. Notable we did no
 Documentation of how authentication was implemented
     passport
 
+## Authentication
+We implemnted authentication using Passport, which was extended with session storage using MongoStore, which is a node module that stores the session data in our mongoDB. In Bridges, there is actually only one function for both signup and login. This is because both are required to verify that a user with the specified email exists, or does not exist. If it does exist and they are trying to signup, the user is sent to an error screen. If the user doesn't exist and they are trying to login, then they are also sent to an error screen. Below is the signup/login service using passport.
+
+```
+passport.use(
+    new LocalStrategy({ usernameField: 'email', passReqToCallback: true}, (req, email, password, done) => {
+        User.findOne({email: email})
+        .then(user => {
+            if (!user) {
+                let name = req.body.name;
+                let locale = req.body.locale;
+                if (name == null || locale == null) {
+                    throw 'One or more values are missing';
+                }
+                // create new user, hash the password, and save it.
+                const newUser = new User({ email, password, name, locale });
+                console.log('creating new user');
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) {
+                            throw err;
+                        }
+                        newUser.password = hash;
+                        newUser
+                        .save()
+                        .then(user => {
+                            console.log(user);
+                            return done(null, user);
+                        })
+                        .catch(err => {
+                            return done(null, false, {message: err});
+                        })
+                    })
+                })
+            }
+            else {
+                // user exists, compare hashes of passwords, then log user in if correct.
+                bcrypt.compare(password, user.password, (err, passwordsMatch) => {
+                    if (err) {
+                        throw err;
+                    }
+                    if (passwordsMatch) {
+                        return done(null, user);
+                    }
+                    else {
+                        return done(null, false, { message: 'Email or Password Incorrect.'});
+                    }
+                })
+            }
+        })
+    })
+);
+```
+
 Jose:
 Documentation of how your database and database access was implemented
 Documentation of what you used to implement the front-end, including any technology used for styling of the front-end (e.g. Bootstrap)
@@ -67,7 +121,74 @@ Full documentation of what framework or external code you used
 Documentation of how Error handling is supported in your application
 Mobile/responsive design was implemented and what limitation your project has with respect to accessibility requirement and responsive design
 
+
 ### Member Roles:
 We defined our roles based on ownership of functionality. We started the project with specific roles, but as the project progressed and we periodically worked together on calls, the lines of our work were blurred. Below we describe our part of the project.
 #### Kinori Rosnow: 
 My role for this project was handling the language translations and the language data interactions. A core of the site is the translation of language where we leveraged Microsoft's Azure Translation API to translate to every language we support. The translation capabilities are limited by the Azure Translation API capability. The messages are stored in every language supported to maximize speed efficiency with a tradeoff with space. For the message database schema I had the message all stored in the same dictionary so the backend interactions could all be the same. The original message language was stored in the schema separately. To be specific my front end work was the language selection drop down in the top right of the screen. Most of my work; however was on the back end. I routed the requests for the change of language selection to the server which update the user information `Locale` in the database. The client side would then request the messages in the new language. My part of the system does have a possible flaw in that if a user's `Locale` in the database differed from their keyboard language, there may be a way to trick the system into storing the wrong original language of the message in the database. Given more time I would be interested in addressing this to combat potential malicious users. Although I'm not sure the full extent of the possible harm yet as the translation API can detect correct languages and our system doesn't depend on the language except for what it displays to the users. We do not think this is a security issue.
+
+## Error Handling
+
+In general, our application contains most of it's error handling on the server side surrounding the authentication, however there is also client side form-validation for the login and signup pages.
+
+ There are appropriate error catches for when the user is not signed in, for example. Below is a snippet of that code.
+
+```
+const requiresAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next()
+    }
+    else {
+        res.redirect('/auth/login');
+    }
+}
+
+// if the user is authenticated already, then we forward them to the chat/dashboard.
+const forwardOnAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        res.redirect('/chat');
+    }
+    else {
+        next();
+    }
+}
+```
+
+This snippet contains 2 middleware functions that handle when the user visits a route. If they are not logged in, then they are redirected to the login page. The second function is for if they visit the login page when logged in, then they are forwarded to the chat app.
+
+## Mobile/Responsive Design
+Bridges Chat Translator is fully functional on mobile screen formats. Below you can see the difference in mobile vs desktop designs.
+
+<img src="https://imgur.com/9X5DB4k.png"
+     alt="Bridges Desktop Design"
+     style="float: left; padding-right: 10px; width: 350px"/>
+
+<img src="https://i.imgur.com/qqdrJ1R.png"
+     alt="Bridges Desktop Design"
+     style=" width: 200px; padding-right: 10px; float:left"/>
+
+<img src="https://i.imgur.com/eXt4HbI.png"
+alt="Bridges Desktop Design"
+style="width: 215px; clear:both;"/>
+<p style='clear: both;'>
+
+As you can see, the mobile format collapses the left side into a hamburger menu that can be toggled.
+
+## External Code and Frameworks:
+For this project, we ended up using a somewhat minimal spread of external libraries and packages. Most of the libraries we used were for more complex thing such as user authentication and session storage. These would not have been possible to reliably implement in the time frame of the project.
+
+The following is a list of all the external libraries we used.
+- "bcryptjs": "^2.4.3",
+- "body-parser": "^1.19.0",
+- "connect-mongo": "^3.2.0",
+- "cookie-parser": "^1.4.5",
+- "dotenv": "^8.2.0",
+- "ejs": "^3.1.5",
+- "express": "^4.17.1",
+- "express-session": "^1.17.1",
+- "mongoose": "^5.10.3",
+- "node-fetch": "^2.6.1",
+- "passport": "^0.4.1",
+- "passport-local": "^1.0.0",
+- "passport.socketio": "^3.7.0",
+- "socket.io": "^3.0.0"

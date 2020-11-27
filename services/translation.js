@@ -53,11 +53,12 @@ const translateText = (from, to, text) => {
             endpoint += ',' + lang;
         }
     }
-
+    console.log(endpoint);
     return fetch(endpoint, options)
     .then(function(res) {
         return res.json()
     }).then(function(data) {
+        console.log(data);
         return data[0].translations;
     })
     .catch(function(err) {
