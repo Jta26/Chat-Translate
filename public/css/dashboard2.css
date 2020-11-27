@@ -135,8 +135,8 @@ body {
   background: #eee;
   border-radius: 10px;
   text-decoration: none;
-  font-size: 2em;
-  padding: 20px;
+  font-size: 1.5em;
+  padding: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -362,7 +362,9 @@ body {
     margin: 0;
   }
   #chat-container {
-    height: 98vh;
+    position: fixed;
+    top:0;
+    left:0;
   }
   #conversation-list, #search-container, #new-msg-container {
     display: none;
@@ -370,6 +372,11 @@ body {
 
   #chat-title, #chat-message-list, #chat-form {
     grid-column: span 2;
+  }
+  #chat-form {
+    position: fixed;
+    bottom:0;
+    width: 100vw;
   }
   .m-hamburger {
     display: block;
@@ -385,9 +392,12 @@ body {
       width: 35px;
     }
   #chat-title {
-    font-size: 1.9em;
+    font-size: 1em;
   }
   .message-text p {
     font-size: 1.5em;
+  }
+  #language_select {
+    font-size: 1.1em;
   }
 }
