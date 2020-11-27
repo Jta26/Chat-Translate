@@ -48,7 +48,13 @@ Text contrast and font is chosen to be easily visible even for those with colorb
 ### Robust
 We are HTML validated. There are no non-standard interface components.
 
-Add screenshot of HTML validation
+Here is the validation report for the html for our dashboard (the page where you chat with others).
+
+<img src="https://i.imgur.com/KrCTtya.png"
+alt="Bridges Desktop Design"
+style="width: 35%; clear:both;"/>
+
+
 ### Limitations
 There are some limitations of the accisibility of the website. Notable we did not have time to create instructional pages that explain the usage of the website. We aimed to make the UI simple enough that it was self explanatory, but some users may find it convenient to have instructions. Another potential improvement is our chats show text as the server recieve and emit it to the chat websockets. As a result the arrival and displaying of messages is at the mercy of the rate at which they arrive. With a sufficiently large chat room or fast enough users, chats may arrive faster than users can read them. Users can scroll but there may be users that would prefer a "slow mode" that allows them to read the chats at a rate that is more accessible to them. Our current answer is the scroll, but some users may prefer a "slow mode".
 
@@ -121,12 +127,6 @@ Full documentation of what framework or external code you used
 Documentation of how Error handling is supported in your application
 Mobile/responsive design was implemented and what limitation your project has with respect to accessibility requirement and responsive design
 
-
-### Member Roles:
-We defined our roles based on ownership of functionality. We started the project with specific roles, but as the project progressed and we periodically worked together on calls, the lines of our work were blurred. Below we describe our part of the project.
-#### Kinori Rosnow: 
-My role for this project was handling the language translations and the language data interactions. A core of the site is the translation of language where we leveraged Microsoft's Azure Translation API to translate to every language we support. The translation capabilities are limited by the Azure Translation API capability. The messages are stored in every language supported to maximize speed efficiency with a tradeoff with space. For the message database schema I had the message all stored in the same dictionary so the backend interactions could all be the same. The original message language was stored in the schema separately. To be specific my front end work was the language selection drop down in the top right of the screen. Most of my work; however was on the back end. I routed the requests for the change of language selection to the server which update the user information `Locale` in the database. The client side would then request the messages in the new language. My part of the system does have a possible flaw in that if a user's `Locale` in the database differed from their keyboard language, there may be a way to trick the system into storing the wrong original language of the message in the database. Given more time I would be interested in addressing this to combat potential malicious users. Although I'm not sure the full extent of the possible harm yet as the translation API can detect correct languages and our system doesn't depend on the language except for what it displays to the users. We do not think this is a security issue.
-
 ## Error Handling
 
 In general, our application contains most of it's error handling on the server side surrounding the authentication, however there is also client side form-validation for the login and signup pages.
@@ -161,15 +161,15 @@ Bridges Chat Translator is fully functional on mobile screen formats. Below you 
 
 <img src="https://imgur.com/9X5DB4k.png"
      alt="Bridges Desktop Design"
-     style="float: left; padding-right: 10px; width: 350px"/>
+     style="float: left; padding-right: 10px; width: 35%"/>
 
 <img src="https://i.imgur.com/qqdrJ1R.png"
-     alt="Bridges Desktop Design"
-     style=" width: 200px; padding-right: 10px; float:left"/>
+     alt="Bridges Mobile Design"
+     style=" width: 20%; padding-right: 10px; float:left"/>
 
 <img src="https://i.imgur.com/eXt4HbI.png"
-alt="Bridges Desktop Design"
-style="width: 215px; clear:both;"/>
+alt="Bridges Mobile Hamburger Menu Design"
+style="width: 20%; clear:both;"/>
 <p style='clear: both;'>
 
 As you can see, the mobile format collapses the left side into a hamburger menu that can be toggled.
@@ -192,3 +192,39 @@ The following is a list of all the external libraries we used.
 - "passport-local": "^1.0.0",
 - "passport.socketio": "^3.7.0",
 - "socket.io": "^3.0.0"
+
+### Member Roles:
+We defined our roles based on ownership of functionality. We started the project with specific roles, but as the project progressed and we periodically worked together on calls, the lines of our work were blurred. Below we describe our part of the project.
+#### Kinori Rosnow: 
+My role for this project was handling the language translations and the language data interactions. A core of the site is the translation of language where we leveraged Microsoft's Azure Translation API to translate to every language we support. The translation capabilities are limited by the Azure Translation API capability. The messages are stored in every language supported to maximize speed efficiency with a tradeoff with space. For the message database schema I had the message all stored in the same dictionary so the backend interactions could all be the same. The original message language was stored in the schema separately. To be specific my front end work was the language selection drop down in the top right of the screen. Most of my work; however was on the back end. I routed the requests for the change of language selection to the server which update the user information `Locale` in the database. The client side would then request the messages in the new language. My part of the system does have a possible flaw in that if a user's `Locale` in the database differed from their keyboard language, there may be a way to trick the system into storing the wrong original language of the message in the database. Given more time I would be interested in addressing this to combat potential malicious users. Although I'm not sure the full extent of the possible harm yet as the translation API can detect correct languages and our system doesn't depend on the language except for what it displays to the users. We do not think this is a security issue.
+
+#### Joel Austin
+My Role primary for the project was to handle implementing socket.io to handle sending and recieving messages. I also achieved a stretch goal we had that was to implemnt individual rooms where people would chat 1:1. My part included both the server-side and client-side implementations of socket.io. 
+
+There's actually an interesting system for how I engineered that work. In order to get rooms to work. I needed to generate unique ID that could be deciphered from some data of each user, so I actually ended up alphabetically sorting the 2 user emails and doing a simple hashing on the concatination of the email strings.
+
+```
+function getRoomID(users) {
+    users.sort((a,b) => {
+        return a.email.localeCompare(b.email);
+    });
+    const [first, second] = users;
+    const hash = generateHash(first.email + second.email) + 'A';
+    return hash;
+}
+
+function generateHash(string) {
+    var hash = 0;
+    if (string.length == 0)
+        return hash;
+    for (let i = 0; i < string.length; i++) {
+        var charCode = string.charCodeAt(i);
+        hash = ((hash << 7) - hash) + charCode;
+        hash = hash & hash;
+    }
+    return hash;
+}
+```
+
+I also worked on implementing the authentication on the backend for the site using passport.
+
